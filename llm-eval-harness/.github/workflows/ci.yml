@@ -1,0 +1,22 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install ruff && pip install -e .
+      - run: ruff check .
+      - run: python -m unittest discover -s tests -v
+  eval-gate:
+    # Example of using the harness as a quality gate: fail the PR if quality drops.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e .
+      - run: evalkit run --dataset datasets/qa.jsonl --model examples.models:good_model --out run.json
+      - run: evalkit compare --baseline baselines/main.json --new run.json --max-drop 0.02

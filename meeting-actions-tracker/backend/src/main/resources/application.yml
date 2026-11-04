@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: meeting-actions
+  datasource:
+    # Default: file-based H2 so data survives restarts. Override DB_* for PostgreSQL (see docker-compose.yml).
+    url: ${DB_URL:jdbc:h2:file:./data/meetings}
+    username: ${DB_USER:sa}
+    password: ${DB_PASSWORD:}
+  jpa:
+    open-in-view: false          # no lazy loading in the web layer; mapping happens inside service transactions
+    hibernate:
+      ddl-auto: update           # fine for a demo; use Flyway/Liquibase migrations in production
+  mvc:
+    problemdetails:
+      enabled: true              # RFC 9457 error bodies for framework exceptions too
+
+app:
+  llm:
+    provider: ${LLM_PROVIDER:heuristic}      # heuristic | anthropic
+    api-key: ${ANTHROPIC_API_KEY:}
+    model: ${ANTHROPIC_MODEL:claude-sonnet-5-5}
+    timeout: 30s
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:4200}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health

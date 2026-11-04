@@ -1,0 +1,19 @@
+[project]
+name = "triage"
+version = "1.0.0"
+description = "Tool-using LLM agent for support-ticket triage with validation, policy guardrails and audit trace."
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+anthropic = ["anthropic>=0.40"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 130
